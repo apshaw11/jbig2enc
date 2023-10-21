@@ -1,0 +1,76 @@
+name: Compile jbig2enc
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  Windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        install: >-
+          base-devel
+          mingw-w64-x86_64-toolchain
+          autoconf
+          automake
+          libtool
+          make
+          git
+          mingw-w64-x86_64-libtiff
+          mingw-w64-x86_64-libpng
+          mingw-w64-x86_64-libjpeg
+          mingw-w64-x86_64-leptonica
+
+    - name: Build jbig2enc
+      run: |
+        ./autogen.sh
+        ./configure
+        make
+      shell: msys2 {0}
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-artifacts
+        path: |
+          lib/jbig2.exe
+          lib/*.so
+          include/*.h
+
+  Linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y autoconf automake libtool make libtiff-dev libpng-dev libjpeg-dev libleptonica-dev
+
+      - name: Build jbig2enc
+        run: |
+          ./autogen.sh
+          ./configure
+          make
+    
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: |
+            src/jbig2
+            src/.libs/libjbig2enc.so.0.0.28
+            src/.libs/libjbig2enc.a
+

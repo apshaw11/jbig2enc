@@ -43,8 +43,8 @@ AC_CANONICAL_HOST
 case $host_os in
 	mingw*)
 		AC_DEFINE_UNQUOTED(MINGW,1,[This is a MinGW system])
-		AC_CHECK_LIB(ws2_32, _head_libws2_32_a,,
-			echo "Error! zlib not detected."
+		AC_CHECK_LIB(ws2_32, WSAStartup,,
+			echo "Error! ws2_32 not detected."
 			exit -1)
 		LIBS="$LIBS -lws2_32"
 		;;

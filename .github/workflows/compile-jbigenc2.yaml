@@ -43,9 +43,11 @@ jobs:
       with:
         name: build-artifacts
         path: |
-          lib/jbig2.exe
-          lib/*.so
-          include/*.h
+          src/jbig2.exe
+          src/.libs/libjbig2enc-0.dll
+          src/.libs/libjbig2enc.a
+          src/.libs/libjbig2enc.dll.a
+          lib
 
   Linux:
     runs-on: ubuntu-latest
@@ -73,4 +75,5 @@ jobs:
             src/jbig2
             src/.libs/libjbig2enc.so.0.0.28
             src/.libs/libjbig2enc.a
+            lib
 
